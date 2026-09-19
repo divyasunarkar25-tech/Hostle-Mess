@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Menu</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+
+<body>
+    <nav class="navbar" style="background:var(--secondary-color); color:white;">
+        <div class="logo" style="color:white">Admin Panel</div>
+        <div class="nav-links" id="adminLinks" style="display:flex;">
+            <a href="dashboard.html" style="color:white">Dashboard</a>
+            <a href="menu.html" style="color:var(--primary-color)">Manage Menu</a>
+            <a href="feedback.html" style="color:white">View Feedback</a>
+            <button class="btn btn-primary logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="section-title">Weekly Menu Config</h1>
+        <div id="alertBox"></div>
+
+        <div class="card" style="margin-bottom:2rem; background:#f0f5fa;">
+            <h3 style="margin-bottom:1rem">Update a Day</h3>
+            <form id="adminMenuForm">
+                <div class="form-group">
+                    <label>Select Day</label>
+                    <select id="daySelect" class="form-control">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="form-group"><label>Breakfast</label><input type="text" id="mBreak" class="form-control">
+                    </div>
+                    <div class="form-group"><label>Lunch</label><input type="text" id="mLunch" class="form-control">
+                    </div>
+                    <div class="form-group"><label>Snacks</label><input type="text" id="mSnack" class="form-control">
+                    </div>
+                    <div class="form-group"><label>Dinner</label><input type="text" id="mDinner" class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-secondary">Save Day Menu</button>
+            </form>
+        </div>
+
+        <h3 style="margin-bottom:1rem">Current Live Menu</h3>
+        <div class="menu-grid" id="adminMenuContainer">
+            <!-- Injected -->
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script src="js/admin-menu.js"></script>
+</body>
+
+</html>

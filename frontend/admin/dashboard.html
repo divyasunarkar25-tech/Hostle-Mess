@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+
+<body>
+    <nav class="navbar" style="background:var(--secondary-color); color:white;">
+        <div class="logo" style="color:white">Admin Panel</div>
+        <div class="nav-links" id="adminLinks" style="display:flex;">
+            <a href="dashboard.html" style="color:var(--primary-color)">Dashboard</a>
+            <a href="menu.html" style="color:white">Manage Menu</a>
+            <a href="feedback.html" style="color:white">View Feedback</a>
+            <button class="btn btn-primary logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="section-title" style="text-align:left">System Overview</h1>
+        <div class="dashboard-grid">
+            <div class="card stat-card">
+                <h3>Total Feedbacks</h3>
+                <div class="value" id="statFeedback">-</div>
+            </div>
+            <div class="card stat-card">
+                <h3>Configured Menu Days</h3>
+                <div class="value" id="statMenu">-</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Quick Actions</h3>
+            <div style="margin-top:1.5rem; display:flex; gap:1rem;">
+                <a href="menu.html" class="btn btn-secondary">Edit Weekly Menu</a>
+                <a href="feedback.html" class="btn btn-outline">Analyze Feedback</a>
+            </div>
+        </div>
+    </div>
+    <script src="../js/common.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+
+</html>

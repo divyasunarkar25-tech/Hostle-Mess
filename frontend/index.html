@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Mess Management</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Mess Manager</div>
+    <div class="nav-links" id="guestLinks">
+      <a href="index.html" class="active">Home</a>
+      <a href="login.html" class="btn btn-primary">Login</a>
+      <a href="register.html" class="btn btn-outline">Register</a>
+    </div>
+    <div class="nav-links" id="userLinks" style="display:none;">
+      <a href="index.html" class="active">Home</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="nutrition.html">Nutrition</a>
+      <span id="navUserName"></span>
+      <button class="btn btn-secondary logout-btn">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="hero">
+      <h1>Welcome to Food Mess Management</h1>
+      <p>Check today's menu, share your feedback and explore nutrition information.</p>
+    </div>
+
+    <h2 class="section-title">This Week's Menu</h2>
+    <div id="alertBox"></div>
+    <div class="menu-grid" id="menuContainer">
+       <p style="text-align:center; width:100%">Loading menu...</p>
+    </div>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/menu.js"></script>
+</body>
+</html>

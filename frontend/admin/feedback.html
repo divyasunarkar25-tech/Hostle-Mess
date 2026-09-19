@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Feedback</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+
+<body>
+    <nav class="navbar" style="background:var(--secondary-color); color:white;">
+        <div class="logo" style="color:white">Admin Panel</div>
+        <div class="nav-links" id="adminLinks" style="display:flex;">
+            <a href="dashboard.html" style="color:white">Dashboard</a>
+            <a href="menu.html" style="color:white">Manage Menu</a>
+            <a href="feedback.html" style="color:var(--primary-color)">View Feedback</a>
+            <button class="btn btn-primary logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="section-title">All Student Feedback</h1>
+        <div id="alertBox"></div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name (Email)</th>
+                        <th>Rating</th>
+                        <th>Qual</th>
+                        <th>Quan</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody id="allFeedbackTable">
+                    <tr>
+                        <td colspan="6">Loading data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            reqAuthAdmin();
+            const tbody = document.getElementById('allFeedbackTable');
+            try {
+                const res = await fetch(`${API_BASE_URL}/feedback`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+                const data = await res.json();
+                if (res.ok) {
+                    if (data.length === 0) { return tbody.innerHTML = `<tr><td colspan="6">No feedback right now.</td></tr>`; }
+                    tbody.innerHTML = '';
+                    data.forEach(fb => {
+                        tbody.innerHTML += `
+               <tr>
+                 <td>${new Date(fb.createdAt).toLocaleDateString()}</td>
+                 <td>${fb.user ? fb.user.name : fb.name} <br><small style="color:gray">${fb.user ? fb.user.email : fb.email}</small></td>
+                 <td><span class="badge">${fb.rating}/5</span></td>
+                 <td>${fb.quality}</td>
+                 <td>${fb.quantity}</td>
+                 <td style="max-width:300px; white-space:normal;">${fb.comment || '-'}</td>
+               </tr>
+             `;
+                    });
+                }
+            } catch (e) { tbody.innerHTML = '<tr><td colspan="6">Failed to load</td></tr>'; }
+        });
+    </script>
+</body>
+
+</html>

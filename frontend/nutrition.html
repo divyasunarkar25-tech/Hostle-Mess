@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Food Nutrition Scanner</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">Mess Manager</div>
+        <div class="nav-links" id="userLinks">
+            <a href="index.html">Home</a>
+            <a href="feedback.html">Feedback</a>
+            <a href="nutrition.html" class="active">Nutrition</a>
+            <span id="navUserName"></span>
+            <button class="btn btn-secondary logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="section-title">Nutrition Scanner</h2>
+        <div id="alertBox"></div>
+        <div style="max-width:500px; margin:0 auto;">
+            <div class="card" style="text-align:center;">
+                <p style="margin-bottom:1.5rem; color:var(--text-secondary);">Upload an image of your food to analyze
+                    its nutrition content.</p>
+                <form id="nutritionForm">
+                    <input type="file" id="foodImage" accept="image/*" class="form-control" style="margin-bottom:1.5rem"
+                        required>
+                    <img id="imagePreview"
+                        style="display:none; max-width:100%; max-height:300px; margin-bottom:1.5rem; border-radius:8px; border:1px solid #ddd;">
+                    <button type="submit" id="analyzeBtn" class="btn btn-primary" style="width:100%">Analyze
+                        Nutrition</button>
+                </form>
+
+                <div id="resultBox" style="margin-top:2rem; display:none; text-align:left;">
+                    <h3
+                        style="color:var(--primary-color); margin-bottom:1rem; border-bottom:1px solid #ddd; padding-bottom:0.5rem">
+                        Results</h3>
+                    <p><strong>Food:</strong> <span id="resName"></span></p>
+                    <p><strong>Calories:</strong> <span id="resCal"></span> kcal</p>
+                    <p><strong>Protein:</strong> <span id="resPro"></span> g</p>
+                    <p><strong>Carbs:</strong> <span id="resCarb"></span> g</p>
+                    <p><strong>Fat:</strong> <span id="resFat"></span> g</p>
+
+                    <button id="saveNutritionBtn" class="btn btn-secondary" style="width:100%; margin-top:1.5rem;">Save
+                        Nutrition to Feed</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Feed Section -->
+        <div style="max-width:700px; margin: 4rem auto 2rem auto;">
+            <h2 class="section-title">Community Nutrition Feed</h2>
+            <div id="nutritionFeed">
+                <!-- Feed items will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/nutrition.js"></script>
+</body>
+
+</html>
