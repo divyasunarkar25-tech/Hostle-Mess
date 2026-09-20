@@ -1,4 +1,59 @@
 const Nutrition = require('../models/Nutrition');
+const fs = require('fs/promises');
+
+const nutritionPrompt = `Analyze this food image. Return ONLY valid JSON in this exact format:
+{
+  "foodName": "identified food name",
+  "nutrition": { "calories": 0, "protein": 0, "carbs": 0, "fat": 0, "fiber": 0 },
+  "aiResponse": "Brief serving-size assumption and uncertainty."
+}
+Estimate one visible serving. Use numeric values for all nutrition fields.`;
+
+const parseNutrition = (text) => {
+    const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+    const parsed = JSON.parse(cleaned);
+    const nutrition = parsed.nutrition || {};
+    if (!parsed.foodName) throw new Error('Gemini did not identify a food name.');
+
+    return {
+        foodName: String(parsed.foodName).trim(),
+        nutrition: {
+            calories: Number(nutrition.calories) || 0,
+            protein: Number(nutrition.protein) || 0,
+            carbs: Number(nutrition.carbs) || 0,
+            fat: Number(nutrition.fat) || 0,
+            fiber: Number(nutrition.fiber) || 0,
+            aiResponse: String(parsed.aiResponse || 'Nutrition estimate generated from the uploaded image.').trim()
+        }
+    };
+};
+
+const analyzeWithGemini = async (file) => {
+    const image = await fs.readFile(file.path);
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+    const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(process.env.AI_API_KEY)}`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [
+                    { text: nutritionPrompt },
+                    { inlineData: { mimeType: file.mimetype, data: image.toString('base64') } }
+                ] }],
+                generationConfig: { responseMimeType: 'application/json', temperature: 0.2 }
+            })
+        }
+    );
+    const payload = await response.json();
+    if (!response.ok) {
+        console.error('Gemini nutrition analysis failed:', payload?.error?.message || response.status);
+        throw new Error('Gemini could not analyze this image right now. Please try again.');
+    }
+    const text = payload?.candidates?.[0]?.content?.parts?.map(part => part.text || '').join('').trim();
+    if (!text) throw new Error('Gemini returned no nutrition result.');
+    return parseNutrition(text);
+};
 
 const analyzeNutrition = async (req, res) => {
     try {
@@ -6,32 +61,27 @@ const analyzeNutrition = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Please upload a food image.' });
         }
 
-        // Capture the static server URL piece for the saved file
         const imageUrl = `/uploads/${req.file.filename}`;
 
         if (!process.env.AI_API_KEY) {
-            // Still return the URL so we can save and preview even without real AI
-            return res.status(200).json({
+            return res.status(503).json({
                 success: false,
-                message: 'Nutrition AI is not configured yet. Please configure AI_API_KEY in backend/.env',
-                data: null,
-                imageUrl
+                message: 'Nutrition analysis is temporarily unavailable.'
             });
         }
 
-        // Extracted dummy logic mimicking Gemini return
-        res.status(200).json({
-            success: true,
-            message: 'Analysis retrieved (simulated)',
+        const analysis = await analyzeWithGemini(req.file);
+        const entry = await Nutrition.create({
+            foodName: analysis.foodName,
             imageUrl,
-            data: {
-                name: 'Sample Analyzed Meal',
-                calories: 320,
-                protein: 15,
-                carbs: 45,
-                fat: 12,
-                fiber: 4
-            }
+            nutrition: analysis.nutrition
+        });
+        res.status(201).json({
+            success: true,
+            message: 'Analysis saved',
+            imageUrl,
+            data: analysis,
+            entry
         });
 
     } catch (err) {
@@ -48,7 +98,7 @@ const saveNutrition = async (req, res) => {
         }
 
         const entry = await Nutrition.create({
-            user: req.user.id, // Derived securely from token
+            user: req.user?.id,
             foodName,
             imageUrl,
             nutrition

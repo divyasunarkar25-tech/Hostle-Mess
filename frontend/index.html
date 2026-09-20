@@ -18,7 +18,6 @@
     <div class="nav-links" id="userLinks" style="display:none;">
       <a href="index.html" class="active">Home</a>
       <a href="feedback.html">Feedback</a>
-      <a href="nutrition.html">Nutrition</a>
       <span id="navUserName"></span>
       <button class="btn btn-secondary logout-btn">Logout</button>
     </div>
@@ -35,9 +34,25 @@
     <div class="menu-grid" id="menuContainer">
        <p style="text-align:center; width:100%">Loading menu...</p>
     </div>
+
+    <section class="nutrition-section" aria-labelledby="nutritionTitle">
+      <h2 class="section-title" id="nutritionTitle">Nutrition AI</h2>
+      <div class="card nutrition-chat">
+        <p class="nutrition-intro">Upload a food image to get a nutrition estimate. Results are shared with all Home visitors.</p>
+        <form id="nutritionForm" class="nutrition-form">
+          <input type="file" id="foodImage" accept="image/*" class="form-control" required>
+          <img id="imagePreview" class="nutrition-preview" alt="Selected food preview" hidden>
+          <button type="submit" id="analyzeBtn" class="btn btn-primary">Analyze Food</button>
+        </form>
+        <div id="nutritionFeed" class="nutrition-feed" aria-live="polite">
+          <p class="nutrition-empty">Loading nutrition history...</p>
+        </div>
+      </div>
+    </section>
   </div>
 
   <script src="js/common.js"></script>
   <script src="js/menu.js"></script>
+  <script src="js/nutrition.js"></script>
 </body>
 </html>
